@@ -1,0 +1,32 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:justdostuff.com)",
+      "WebFetch(domain:justdostuff.app)",
+      "WebFetch(domain:justdostuff.io)",
+      "WebFetch(domain:justdostuff.ai)",
+      "Bash(npx create-next-app:*)",
+      "Bash(where:*)",
+      "Bash(node:*)",
+      "Bash(npm:*)",
+      "Bash(winget install:*)",
+      "Bash(export NVM_HOME=\"$APPDATA/nvm\")",
+      "Bash(export PATH=\"$NVM_HOME:$PATH\")",
+      "Bash(nvm install:*)",
+      "Bash(cmd.exe /c \"where nvm\")",
+      "Bash(cmd.exe /c \"nvm version\")",
+      "Bash(export PATH=\"/c/Program Files/nodejs:$PATH\":*)",
+      "Bash(npx:*)",
+      "Bash(cmd.exe /c \"xcopy C:\\\\Users\\\\joshi\\\\justdostuff-temp C:\\\\Users\\\\joshi\\\\JustDoStuff /E /H /Y /Q\")",
+      "Bash(cmd.exe /c \"robocopy C:\\\\Users\\\\joshi\\\\justdostuff-temp C:\\\\Users\\\\joshi\\\\JustDoStuff /E /NFL /NDL /NP /MT:8\")",
+      "Bash(powershell:*)",
+      "Bash(dir /s /b \"C:\\\\Users\\\\joshi\\\\JustDoStuff\")",
+      "Bash(git config:*)",
+      "Bash(gh auth:*)",
+      "Bash(git --version:*)",
+      "Bash(git init:*)",
+      "Bash(git remote add:*)",
+      "Bash(git add:*)"
+    ]
+  }
+}
