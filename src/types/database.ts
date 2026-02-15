@@ -305,6 +305,55 @@ export interface Database {
           created_at?: string;
         };
       };
+      conversations: {
+        Row: {
+          id: string;
+          booking_id: string;
+          seeker_id: string;
+          provider_id: string;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          booking_id: string;
+          seeker_id: string;
+          provider_id: string;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          booking_id?: string;
+          seeker_id?: string;
+          provider_id?: string;
+          created_at?: string;
+        };
+      };
+      messages: {
+        Row: {
+          id: string;
+          conversation_id: string;
+          sender_id: string;
+          content: string;
+          is_read: boolean;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          conversation_id: string;
+          sender_id: string;
+          content: string;
+          is_read?: boolean;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          conversation_id?: string;
+          sender_id?: string;
+          content?: string;
+          is_read?: boolean;
+          created_at?: string;
+        };
+      };
     };
     Views: Record<string, never>;
     Functions: Record<string, never>;
@@ -325,3 +374,5 @@ export type Experience = Database["public"]["Tables"]["experiences"]["Row"];
 export type Booking = Database["public"]["Tables"]["bookings"]["Row"];
 export type Availability = Database["public"]["Tables"]["availability"]["Row"];
 export type Review = Database["public"]["Tables"]["reviews"]["Row"];
+export type Conversation = Database["public"]["Tables"]["conversations"]["Row"];
+export type Message = Database["public"]["Tables"]["messages"]["Row"];

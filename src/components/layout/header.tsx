@@ -20,6 +20,7 @@ import {
   LayoutDashboard,
   User,
   CalendarDays,
+  MessageCircle,
   LogOut,
 } from "lucide-react";
 import type { Profile } from "@/types/database";
@@ -79,6 +80,7 @@ export function Header() {
             icon: LayoutDashboard,
           },
           { href: "/bookings", label: "Bookings", icon: CalendarDays },
+          { href: "/messages", label: "Messages", icon: MessageCircle },
         ]
       : []),
   ];

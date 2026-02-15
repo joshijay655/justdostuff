@@ -14,6 +14,7 @@ import {
   Compass,
   Plus,
   CalendarDays,
+  MessageCircle,
   User,
   ArrowRight,
 } from "lucide-react";
@@ -153,6 +154,26 @@ export default async function DashboardPage() {
             <CardContent>
               <span className="flex items-center text-sm text-blue-600">
                 View bookings
+                <ArrowRight className="ml-1 h-4 w-4 transition-transform group-hover:translate-x-1" />
+              </span>
+            </CardContent>
+          </Card>
+        </Link>
+
+        <Link href="/messages" className="group">
+          <Card className="h-full transition-colors hover:border-primary/50">
+            <CardHeader>
+              <div className="mb-2 flex h-10 w-10 items-center justify-center rounded-lg bg-purple-500/10">
+                <MessageCircle className="h-5 w-5 text-purple-600" />
+              </div>
+              <CardTitle className="text-lg">Messages</CardTitle>
+              <CardDescription>
+                Chat with providers and seekers about bookings
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <span className="flex items-center text-sm text-purple-600">
+                View conversations
                 <ArrowRight className="ml-1 h-4 w-4 transition-transform group-hover:translate-x-1" />
               </span>
             </CardContent>
