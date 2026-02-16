@@ -15,6 +15,7 @@ import {
   Plus,
   CalendarDays,
   MessageCircle,
+  Shield,
   User,
   ArrowRight,
 } from "lucide-react";
@@ -83,11 +84,22 @@ export default async function DashboardPage() {
       )}
 
       {/* Role Badge */}
-      <div className="mb-6 flex items-center gap-2">
+      <div className="mb-6 flex flex-wrap items-center gap-2">
         <Badge variant="secondary" className="capitalize">
           {profile.role}
         </Badge>
-        {!profile.is_verified && (
+        {profile.is_verified ? (
+          <Badge variant="outline" className="text-green-600 border-green-300">
+            <Shield className="mr-1 h-3 w-3" />
+            Verified
+          </Badge>
+        ) : isProvider ? (
+          <Link href="/dashboard/verification">
+            <Badge variant="outline" className="text-amber-600 cursor-pointer hover:bg-amber-50">
+              Unverified — Get Verified
+            </Badge>
+          </Link>
+        ) : (
           <Badge variant="outline" className="text-amber-600">
             Unverified
           </Badge>
@@ -179,6 +191,28 @@ export default async function DashboardPage() {
             </CardContent>
           </Card>
         </Link>
+
+        {isProvider && !profile.is_verified && (
+          <Link href="/dashboard/verification" className="group">
+            <Card className="h-full border-amber-200 transition-colors hover:border-amber-400">
+              <CardHeader>
+                <div className="mb-2 flex h-10 w-10 items-center justify-center rounded-lg bg-amber-500/10">
+                  <Shield className="h-5 w-5 text-amber-600" />
+                </div>
+                <CardTitle className="text-lg">Get Verified</CardTitle>
+                <CardDescription>
+                  Build trust with seekers and get more bookings
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <span className="flex items-center text-sm text-amber-600">
+                  Start verification
+                  <ArrowRight className="ml-1 h-4 w-4 transition-transform group-hover:translate-x-1" />
+                </span>
+              </CardContent>
+            </Card>
+          </Link>
+        )}
       </div>
     </div>
   );

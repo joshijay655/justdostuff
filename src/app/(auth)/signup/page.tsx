@@ -17,19 +17,64 @@ import {
 } from "@/components/ui/card";
 import { Loader2, CheckCircle } from "lucide-react";
 
+function calculateAge(dob: string): number {
+  const today = new Date();
+  const birthDate = new Date(dob);
+  let age = today.getFullYear() - birthDate.getFullYear();
+  const monthDiff = today.getMonth() - birthDate.getMonth();
+  if (
+    monthDiff < 0 ||
+    (monthDiff === 0 && today.getDate() < birthDate.getDate())
+  ) {
+    age--;
+  }
+  return age;
+}
+
 export default function SignupPage() {
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [dateOfBirth, setDateOfBirth] = useState("");
+  const [tosAccepted, setTosAccepted] = useState(false);
+  const [privacyAccepted, setPrivacyAccepted] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const router = useRouter();
 
+  // Max date: 18 years ago today
+  const maxDate = new Date();
+  maxDate.setFullYear(maxDate.getFullYear() - 18);
+  const maxDateStr = maxDate.toISOString().split("T")[0];
+
   async function handleSignup(e: React.FormEvent) {
     e.preventDefault();
     setLoading(true);
     setError(null);
+
+    // Age verification
+    if (!dateOfBirth) {
+      setError("Date of birth is required");
+      setLoading(false);
+      return;
+    }
+
+    const age = calculateAge(dateOfBirth);
+    if (age < 18) {
+      setError(
+        "You must be at least 18 years old to create an account on JustDoStuff. This platform involves real-world professional experiences that require adult participants."
+      );
+      setLoading(false);
+      return;
+    }
+
+    // TOS and Privacy acceptance
+    if (!tosAccepted || !privacyAccepted) {
+      setError("You must accept the Terms of Service and Privacy Policy to create an account");
+      setLoading(false);
+      return;
+    }
 
     if (password.length < 6) {
       setError("Password must be at least 6 characters");
@@ -44,6 +89,9 @@ export default function SignupPage() {
       options: {
         data: {
           full_name: fullName,
+          date_of_birth: dateOfBirth,
+          tos_accepted_at: new Date().toISOString(),
+          privacy_accepted_at: new Date().toISOString(),
         },
         emailRedirectTo: `${window.location.origin}/auth/callback`,
       },
@@ -60,6 +108,13 @@ export default function SignupPage() {
   }
 
   async function handleGoogleSignup() {
+    // For Google OAuth, we can't collect DOB before redirect.
+    // We'll need to collect it after they return. For now, add a note.
+    if (!tosAccepted || !privacyAccepted) {
+      setError("Please accept the Terms of Service and Privacy Policy first");
+      return;
+    }
+
     const supabase = createClient();
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
@@ -122,6 +177,20 @@ export default function SignupPage() {
               />
             </div>
             <div className="space-y-2">
+              <Label htmlFor="dob">Date of Birth</Label>
+              <Input
+                id="dob"
+                type="date"
+                value={dateOfBirth}
+                onChange={(e) => setDateOfBirth(e.target.value)}
+                max={maxDateStr}
+                required
+              />
+              <p className="text-xs text-muted-foreground">
+                You must be at least 18 years old to use JustDoStuff.
+              </p>
+            </div>
+            <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
               <Input
                 id="email"
@@ -144,6 +213,41 @@ export default function SignupPage() {
                 minLength={6}
               />
             </div>
+
+            {/* Legal agreements */}
+            <div className="space-y-3 rounded-lg border bg-muted/30 p-3">
+              <label className="flex items-start gap-2 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={tosAccepted}
+                  onChange={(e) => setTosAccepted(e.target.checked)}
+                  className="mt-1"
+                />
+                <span className="text-sm">
+                  I agree to the{" "}
+                  <Link href="/terms" className="text-primary underline" target="_blank">
+                    Terms of Service
+                  </Link>{" "}
+                  and confirm I am at least 18 years old *
+                </span>
+              </label>
+              <label className="flex items-start gap-2 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={privacyAccepted}
+                  onChange={(e) => setPrivacyAccepted(e.target.checked)}
+                  className="mt-1"
+                />
+                <span className="text-sm">
+                  I have read and agree to the{" "}
+                  <Link href="/privacy" className="text-primary underline" target="_blank">
+                    Privacy Policy
+                  </Link>{" "}
+                  *
+                </span>
+              </label>
+            </div>
+
             <Button type="submit" className="w-full" disabled={loading}>
               {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               Create Account
@@ -186,6 +290,9 @@ export default function SignupPage() {
             </svg>
             Continue with Google
           </Button>
+          <p className="mt-2 text-center text-xs text-muted-foreground">
+            By signing up with Google, you agree to our Terms and Privacy Policy and confirm you are 18+.
+          </p>
         </CardContent>
         <CardFooter className="justify-center">
           <p className="text-sm text-muted-foreground">

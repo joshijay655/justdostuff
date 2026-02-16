@@ -120,19 +120,19 @@ export default async function ExperienceDetailPage({
             </div>
           ) : (
             <div className="grid gap-2 sm:grid-cols-2">
-              <div className="aspect-video overflow-hidden rounded-l-xl bg-muted sm:row-span-2">
+              <div className="aspect-video overflow-hidden rounded-xl sm:rounded-l-xl sm:rounded-r-none bg-muted sm:row-span-2">
                 <img
                   src={experience.photos[0]}
                   alt={experience.title}
                   className="h-full w-full object-cover"
                 />
               </div>
-              <div className="grid gap-2">
+              <div className="grid grid-cols-2 sm:grid-cols-1 gap-2">
                 {experience.photos.slice(1, 3).map((photo: string, i: number) => (
                   <div
                     key={i}
-                    className={`aspect-video overflow-hidden bg-muted ${
-                      i === 0 ? "rounded-tr-xl" : "rounded-br-xl"
+                    className={`aspect-video overflow-hidden bg-muted rounded-lg ${
+                      i === 0 ? "sm:rounded-tr-xl sm:rounded-lg" : "sm:rounded-br-xl sm:rounded-lg"
                     }`}
                   >
                     <img

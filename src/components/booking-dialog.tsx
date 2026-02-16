@@ -46,6 +46,7 @@ export function BookingDialog({
   const [booking, setBooking] = useState(false);
   const [selectedSlot, setSelectedSlot] = useState<string | null>(null);
   const [step, setStep] = useState<"select" | "confirm">("select");
+  const [ageConfirmed, setAgeConfirmed] = useState(false);
   const [tosAccepted, setTosAccepted] = useState(false);
   const [waiverAccepted, setWaiverAccepted] = useState(false);
   const [ndaAccepted, setNdaAccepted] = useState(false);
@@ -107,6 +108,7 @@ export function BookingDialog({
       loadSlots();
       setStep("select");
       setSelectedSlot(null);
+      setAgeConfirmed(false);
       setTosAccepted(false);
       setWaiverAccepted(false);
       setNdaAccepted(false);
@@ -116,8 +118,8 @@ export function BookingDialog({
   async function handleBook() {
     if (!userId || !selectedSlot) return;
 
-    if (!tosAccepted || !waiverAccepted) {
-      toast.error("Please accept the required agreements");
+    if (!ageConfirmed || !tosAccepted || !waiverAccepted) {
+      toast.error("Please accept all required agreements");
       return;
     }
 
@@ -135,24 +137,36 @@ export function BookingDialog({
 
     const now = new Date().toISOString();
 
-    const { error } = await supabase.from("bookings").insert({
-      seeker_id: userId,
-      provider_id: providerId,
-      experience_id: experienceId,
-      availability_id: selectedSlot,
-      status: "pending",
-      tos_accepted_at: now,
-      waiver_accepted_at: now,
-      nda_accepted_at: requiresNda ? now : null,
-      seeker_emergency_name: emergencyName,
-      seeker_emergency_phone: emergencyPhone,
-    });
+    const { data: newBooking, error } = await supabase
+      .from("bookings")
+      .insert({
+        seeker_id: userId,
+        provider_id: providerId,
+        experience_id: experienceId,
+        availability_id: selectedSlot,
+        status: "pending",
+        tos_accepted_at: now,
+        waiver_accepted_at: now,
+        nda_accepted_at: requiresNda ? now : null,
+        seeker_emergency_name: emergencyName,
+        seeker_emergency_phone: emergencyPhone,
+      })
+      .select("id")
+      .single();
 
     if (error) {
       toast.error("Failed to create booking");
       console.error(error);
     } else {
       toast.success("Booking request sent! The provider will confirm shortly.");
+      // Send email notification to provider (fire and forget)
+      if (newBooking?.id) {
+        fetch("/api/notify", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ type: "booking_requested", bookingId: newBooking.id }),
+        }).catch(() => {});
+      }
       setOpen(false);
       router.push("/bookings");
     }
@@ -316,13 +330,32 @@ export function BookingDialog({
               <label className="flex items-start gap-2">
                 <input
                   type="checkbox"
+                  checked={ageConfirmed}
+                  onChange={(e) => setAgeConfirmed(e.target.checked)}
+                  className="mt-1"
+                />
+                <span className="text-sm">
+                  I confirm that I am at least 18 years of age *
+                </span>
+              </label>
+
+              <label className="flex items-start gap-2">
+                <input
+                  type="checkbox"
                   checked={tosAccepted}
                   onChange={(e) => setTosAccepted(e.target.checked)}
                   className="mt-1"
                 />
                 <span className="text-sm">
-                  I accept the Terms of Service and understand the booking
-                  process *
+                  I accept the{" "}
+                  <a href="/terms" target="_blank" className="text-primary underline">
+                    Terms of Service
+                  </a>{" "}
+                  and{" "}
+                  <a href="/privacy" target="_blank" className="text-primary underline">
+                    Privacy Policy
+                  </a>{" "}
+                  *
                 </span>
               </label>
 

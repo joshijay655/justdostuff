@@ -81,34 +81,36 @@ export default async function BookingsPage() {
 
             return (
               <Card key={booking.id as string}>
-                <CardHeader className="flex flex-row items-start justify-between pb-2">
-                  <div>
-                    <Link
-                      href={`/experiences/${exp?.id}`}
-                      className="hover:underline"
-                    >
-                      <CardTitle className="text-lg">
-                        {exp?.title || "Experience"}
-                      </CardTitle>
-                    </Link>
-                    <CardDescription className="flex items-center gap-1">
-                      <MapPin className="h-3.5 w-3.5" />
-                      {exp?.city}, {exp?.state}
-                    </CardDescription>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Badge variant="outline" className="text-xs">
-                      {isProvider ? "As Provider" : "As Seeker"}
-                    </Badge>
-                    <Badge
-                      className={statusColors[status] || ""}
-                    >
-                      {status.replace("_", " ")}
-                    </Badge>
+                <CardHeader className="pb-2">
+                  <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
+                    <div className="min-w-0">
+                      <Link
+                        href={`/experiences/${exp?.id}`}
+                        className="hover:underline"
+                      >
+                        <CardTitle className="text-base sm:text-lg line-clamp-1">
+                          {exp?.title || "Experience"}
+                        </CardTitle>
+                      </Link>
+                      <CardDescription className="flex items-center gap-1">
+                        <MapPin className="h-3.5 w-3.5 shrink-0" />
+                        {exp?.city}, {exp?.state}
+                      </CardDescription>
+                    </div>
+                    <div className="flex items-center gap-2 shrink-0">
+                      <Badge variant="outline" className="text-xs">
+                        {isProvider ? "As Provider" : "As Seeker"}
+                      </Badge>
+                      <Badge
+                        className={statusColors[status] || ""}
+                      >
+                        {status.replace("_", " ")}
+                      </Badge>
+                    </div>
                   </div>
                 </CardHeader>
                 <CardContent>
-                  <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                  <div className="flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
                     {avail && (
                       <>
                         <span className="flex items-center gap-1">

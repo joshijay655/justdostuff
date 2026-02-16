@@ -35,6 +35,15 @@ export function BookingActions({ bookingId, action }: BookingActionsProps) {
           ? "Booking confirmed!"
           : "Booking declined"
       );
+      // Send email notification to seeker (fire and forget)
+      fetch("/api/notify", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          type: action === "confirm" ? "booking_confirmed" : "booking_declined",
+          bookingId,
+        }),
+      }).catch(() => {});
       router.refresh();
     }
 

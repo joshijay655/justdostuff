@@ -66,14 +66,14 @@ export default function HomePage() {
             real hands-on experiences. From tech startups to culinary kitchens.
           </p>
           <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
-            <Link href="/explore">
-              <Button size="lg" className="gap-2">
+            <Link href="/explore" className="w-full sm:w-auto">
+              <Button size="lg" className="w-full sm:w-auto gap-2">
                 <Compass className="h-5 w-5" />
                 Explore Experiences
               </Button>
             </Link>
-            <Link href="/signup">
-              <Button size="lg" variant="outline" className="gap-2">
+            <Link href="/signup" className="w-full sm:w-auto">
+              <Button size="lg" variant="outline" className="w-full sm:w-auto gap-2">
                 Become a Provider
                 <ArrowRight className="h-4 w-4" />
               </Button>

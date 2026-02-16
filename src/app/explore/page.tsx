@@ -144,89 +144,81 @@ export default async function ExplorePage({
         </div>
       </div>
 
-      {/* Filters row */}
-      <div className="mb-4 flex flex-wrap items-center gap-3 rounded-lg border bg-muted/30 p-3">
-        <SlidersHorizontal className="h-4 w-4 text-muted-foreground" />
+      {/* Filters */}
+      <div className="mb-4 space-y-3 rounded-lg border bg-muted/30 p-3">
+        <div className="flex items-center gap-2">
+          <SlidersHorizontal className="h-4 w-4 text-muted-foreground" />
+          <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Filters</span>
+          {hasActiveFilters && (
+            <a href={buildUrl({ minPrice: undefined, maxPrice: undefined, city: undefined, duration: undefined })} className="ml-auto text-xs text-red-500 hover:underline">
+              Clear all
+            </a>
+          )}
+        </div>
 
-        {/* Sort */}
-        <div className="flex items-center gap-1.5">
+        <div className="flex flex-wrap items-center gap-2">
+          {/* Sort */}
           <span className="text-xs font-medium text-muted-foreground">Sort:</span>
-          <div className="flex gap-1">
-            {[
-              { value: "newest", label: "Newest" },
-              { value: "price_low", label: "Price ↑" },
-              { value: "price_high", label: "Price ↓" },
-              { value: "rating", label: "Top Rated" },
-            ].map((opt) => (
-              <a key={opt.value} href={buildUrl({ sort: opt.value })}>
-                <Badge
-                  variant={sortOption === opt.value ? "default" : "outline"}
-                  className="cursor-pointer text-xs"
-                >
-                  {opt.label}
-                </Badge>
-              </a>
-            ))}
-          </div>
+          {[
+            { value: "newest", label: "Newest" },
+            { value: "price_low", label: "Price ↑" },
+            { value: "price_high", label: "Price ↓" },
+            { value: "rating", label: "Top Rated" },
+          ].map((opt) => (
+            <a key={opt.value} href={buildUrl({ sort: opt.value })}>
+              <Badge
+                variant={sortOption === opt.value ? "default" : "outline"}
+                className="cursor-pointer text-xs"
+              >
+                {opt.label}
+              </Badge>
+            </a>
+          ))}
         </div>
 
-        <div className="h-4 w-px bg-border" />
-
-        {/* Price */}
-        <form className="flex items-center gap-1.5">
-          {params.q && <input type="hidden" name="q" value={params.q} />}
-          {params.category && <input type="hidden" name="category" value={params.category} />}
-          {params.sort && <input type="hidden" name="sort" value={params.sort} />}
-          {params.city && <input type="hidden" name="city" value={params.city} />}
-          {params.duration && <input type="hidden" name="duration" value={params.duration} />}
-          <span className="text-xs font-medium text-muted-foreground">Price:</span>
-          <Input
-            name="minPrice"
-            type="number"
-            placeholder="Min"
-            defaultValue={params.minPrice || ""}
-            className="h-7 w-16 text-xs"
-          />
-          <span className="text-xs text-muted-foreground">-</span>
-          <Input
-            name="maxPrice"
-            type="number"
-            placeholder="Max"
-            defaultValue={params.maxPrice || ""}
-            className="h-7 w-16 text-xs"
-          />
-          <button type="submit" className="rounded bg-primary px-2 py-1 text-xs text-primary-foreground hover:bg-primary/90">
-            Go
-          </button>
-        </form>
-
-        <div className="h-4 w-px bg-border" />
-
-        {/* Duration */}
-        <div className="flex items-center gap-1.5">
+        <div className="flex flex-wrap items-center gap-2">
+          {/* Duration */}
           <span className="text-xs font-medium text-muted-foreground">Duration:</span>
-          <div className="flex gap-1">
-            <a href={buildUrl({ duration: undefined })}>
-              <Badge variant={!params.duration ? "default" : "outline"} className="cursor-pointer text-xs">All</Badge>
-            </a>
-            <a href={buildUrl({ duration: "2-4h" })}>
-              <Badge variant={params.duration === "2-4h" ? "default" : "outline"} className="cursor-pointer text-xs">2-4h</Badge>
-            </a>
-            <a href={buildUrl({ duration: "4-6h" })}>
-              <Badge variant={params.duration === "4-6h" ? "default" : "outline"} className="cursor-pointer text-xs">4-6h</Badge>
-            </a>
-          </div>
-        </div>
+          <a href={buildUrl({ duration: undefined })}>
+            <Badge variant={!params.duration ? "default" : "outline"} className="cursor-pointer text-xs">All</Badge>
+          </a>
+          <a href={buildUrl({ duration: "2-4h" })}>
+            <Badge variant={params.duration === "2-4h" ? "default" : "outline"} className="cursor-pointer text-xs">2-4h</Badge>
+          </a>
+          <a href={buildUrl({ duration: "4-6h" })}>
+            <Badge variant={params.duration === "4-6h" ? "default" : "outline"} className="cursor-pointer text-xs">4-6h</Badge>
+          </a>
 
-        {/* Clear filters */}
-        {hasActiveFilters && (
-          <>
-            <div className="h-4 w-px bg-border" />
-            <a href={buildUrl({ minPrice: undefined, maxPrice: undefined, city: undefined, duration: undefined })} className="text-xs text-red-500 hover:underline">
-              Clear filters
-            </a>
-          </>
-        )}
+          <span className="hidden sm:inline-block h-4 w-px bg-border mx-1" />
+
+          {/* Price */}
+          <form className="flex items-center gap-1.5">
+            {params.q && <input type="hidden" name="q" value={params.q} />}
+            {params.category && <input type="hidden" name="category" value={params.category} />}
+            {params.sort && <input type="hidden" name="sort" value={params.sort} />}
+            {params.city && <input type="hidden" name="city" value={params.city} />}
+            {params.duration && <input type="hidden" name="duration" value={params.duration} />}
+            <span className="text-xs font-medium text-muted-foreground">Price:</span>
+            <Input
+              name="minPrice"
+              type="number"
+              placeholder="Min"
+              defaultValue={params.minPrice || ""}
+              className="h-7 w-16 text-xs"
+            />
+            <span className="text-xs text-muted-foreground">-</span>
+            <Input
+              name="maxPrice"
+              type="number"
+              placeholder="Max"
+              defaultValue={params.maxPrice || ""}
+              className="h-7 w-16 text-xs"
+            />
+            <button type="submit" className="rounded bg-primary px-2 py-1 text-xs text-primary-foreground hover:bg-primary/90">
+              Go
+            </button>
+          </form>
+        </div>
       </div>
 
       {/* Category Pills */}
